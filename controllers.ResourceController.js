@@ -127,9 +127,20 @@ var ResourceController =
  
         for (var i in this.Sources)
         {
-            if (ret.DroneCount > this.Sources[i].DroneCount)
+            //Bias Extension and Spawners
+            if (this.Sources[i].Source.structureType == "spawn" || this.Sources[i].Source.structureType == "extension")
             {
-                ret = this.Sources[i];
+                //We bias Spawns and extension simply by saying there is one less drone on it there there is
+                if (ret.DroneCount > this.Sources[i].DroneCount - 1)
+                {
+                    ret = this.Sources[i];
+                }
+            }
+            else
+            {
+                if (ret.DroneCount > this.Sources[i].DroneCount) {
+                    ret = this.Sources[i];
+                }
             }
         }
         ret.DroneCount++;

@@ -54,7 +54,7 @@ var BirthController =
                                 ownerController.DroneCount--;
                             }
                         }
-
+                        console.log("Removing retired enetry");
                         this.Retiring.splice(itr, 1);
                     }
                 }
@@ -115,11 +115,14 @@ var BirthController =
     },
     RequestRetiring: function(From,Creep)
     {
-        //Sanity Check
-        if(this.Initialized)
-        {
-            //Push the retiring creep onto the retiring list
-            this.Retiring.push({ ControllerName: From.Name, creepName: Creep.name });
+
+        if (Creep.memory == null || Creep.memory.Retiring == false) {
+            //Sanity Check
+            if (this.Initialized) {
+                //Push the retiring creep onto the retiring list
+                this.Retiring.push({ ControllerName: From.Name, creepName: Creep.name });
+                Creep.Memory.Retiring = true;
+            }
         }
     }
 
