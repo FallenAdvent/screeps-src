@@ -81,7 +81,7 @@ var BirthController =
                         var spawner = spawns[i];
 
                         //If the spawner is not currently busy
-                        if (spawner.spawning == false)
+                        if (spawner.spawning == null)
                         {
                             var ret = spawner.createCreep(creepSettings, null, { JobState: null, Retiring: false });
                             if (ret.length >= 3)
