@@ -146,6 +146,23 @@ var ResourceController =
         ret.DroneCount++;
         return ret.Source;
     },
+    GetSourceClosetTo:function(Creep)
+    {
+        var ret = this.Sources[0];
+        var distance = Creep.pos.getRangeTo(ret.Source);
+
+        for(var i in this.Sources)
+        {
+            var distance2 = Creep.pos.getRangeTo(this.Sources[i].Source);
+            if(distance2 < distance)
+            {
+                ret = this.Sources[i];
+            }
+        }
+
+        ret.DroneCount++;
+        return ret.Source;
+    },
     GetBuildTarget: function()
     {
         var ret = this.BuildTargets[0];

@@ -22,7 +22,7 @@ var HarvesterDrone =
             Drone.memory.JobState = "Harvest";
         }
         
-        if (Drone.memory.JobState == "Harvest")
+        if (Drone.memory.JobState == "Harvest" || Drone.memory.JobState == "Collecting")
         {
             //Is this drone at full carry capacity from harvesting
             if (_.sum(Drone.carry) == Drone.carryCapacity) 
@@ -31,11 +31,23 @@ var HarvesterDrone =
             }
             else
             {
-                var source = Controller.RoomController.GetController("ResourceController").GetSource();
-                if (Drone.harvest(source) == ERR_NOT_IN_RANGE)
+                if (Drone.memory.JobState == "Collecting")
                 {
-                    Drone.moveTo(source);
-                    return;
+                    var source = Controller.RoomController.GetController("ResourceController").GetSourceClosetTo(Drone);
+                    if (Drone.harvest(source) == ERR_NOT_IN_RANGE) {
+                        Drone.moveTo(source);
+                        return;
+                    }
+                }
+                else
+                {
+                    var source = Controller.RoomController.GetController("ResourceController").GetSource();
+                    if (Drone.harvest(source) == ERR_NOT_IN_RANGE)
+                    {
+                        Drone.moveTo(source);
+                        return;
+                    }
+                    Drone.memory.JobState = "Collecting";
                 }
             }
 
