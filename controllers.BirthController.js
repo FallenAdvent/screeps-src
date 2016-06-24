@@ -60,40 +60,38 @@ var BirthController =
                 itr--;
             }
 
-            if(this.BirthQueue.length)
+            if (this.BirthQueue.length)
             {
                 var requester = this.BirthQueue.pop();
                 var From = RoomController.GetController(requester.ControllerName);
-                var Cost = requester.RequestCost;
-                var spawns = this.ParentController.Room.find(FIND_MY_STRUCTURES, {
-                    filter: { structureType: STRUCTURE_SPAWN }
-                });
-                //Is there a spawn with enough energy to spawn the requested creep
-                for (var i in spawns)
-                {
-                    var spawner = spawns[i];
-                    if (spawner.energy >= Cost && spawner.spawning == null)
-                    {
-                        var ret = spawner.createCreep(From.CreepSettings, null, { JobState: null, Retiring: false });
-                        if (ret.length >= 3)
-                        {
-                            From.DroneCount++;
-                            From.BirthRequestMade = false;
-                            From.Drones.push(ret);
-                            return;
-                        }
-                    }
-                }
 
-                //If we got here then a spawn just using the spawners energy is not enough so we look at the energy as a whole and try
-                if (RoomController.Room.energyAvailable >= Cost)
+                var creepSettings = From.GetCreepSettings(RoomController.Room.energyAvailable);
+
+                //If no settings were returned we could not afford to spawn the creep at this time
+                if (creepSettings != null)
                 {
-                    var ret = spawner.createCreep(From.CreepSettings, null, { JobState: null, Retiring: false });
-                    if (ret.length >= 3) {
-                        From.DroneCount++;
-                        From.BirthRequestMade = false;
-                        From.Drones.push(ret);
-                        return;
+                    var spawns = this.ParentController.Room.find(FIND_MY_STRUCTURES,
+                    {
+                        filter: { structureType: STRUCTURE_SPAWN }
+                    });
+
+                    //Is there a spawn that is not currently spawning
+                    for (var i in spawns)
+                    {
+                        var spawner = spawns[i];
+
+                        //If the spawner is not currently busy
+                        if (spawner.spawning == false)
+                        {
+                            var ret = spawner.createCreep(creepSettings, null, { JobState: null, Retiring: false });
+                            if (ret.length >= 3)
+                            {
+                                From.DroneCount++;
+                                From.BirthRequestMade = false;
+                                From.Drones.push(ret);
+                                return;
+                            }
+                        }
                     }
                 }
 
@@ -102,14 +100,14 @@ var BirthController =
             }
         }
     },
-    RequestBirth: function(From, Cost)
+    RequestBirth: function(From)
     {
         if (this.Initialized)
         {
             //If we get to here no spawners had enough power to spawn a creep
             From.BirthRequestMade = true;
             //Push the request onto the birthing queue
-            this.BirthQueue.push({ ControllerName: From.Name, RequestCost: Cost });
+            this.BirthQueue.push({ ControllerName: From.Name });
         }
     },
     RequestRetiring: function(From,Creep)

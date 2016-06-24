@@ -35,7 +35,7 @@ var BuilderController =
         this.RoomController = RoomController;
         //Check if we have already made a request for a new drone if not do we need to request any new ones
         if (this.BirthRequestMade == false && this.DroneCount < this.DesiredDones) {
-            RoomController.GetController("BirthController").RequestBirth(this, 300);
+            RoomController.GetController("BirthController").RequestBirth(this);
         }
 
         if (this.Drones.length != 0) {
@@ -53,6 +53,20 @@ var BuilderController =
                 }
             }
         }
+    },
+    GetCreepSettings: function(AvlialbeCost)
+    {
+        if(AvlialbeCost >= 500)
+        {
+            return [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+        }
+
+        if(AvlialbeCost < 400 && AvlialbeCost > 300)
+        {
+            return [WORK, CARRY, CARRY, MOVE, MOVE];
+        }
+
+        return null;
     }
 };
 
