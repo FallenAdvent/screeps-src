@@ -33,14 +33,14 @@ var BirthController =
         {
             //Go through any retiring Creeps and see if they have expired
             var itr = this.Retiring.length;
-            while(itr > 0)
+            while(itr >= 0)
             {
                 var retiringCreepEntry = this.Retiring[itr];
                 if (retiringCreepEntry != null)
                 {
                     var creep = Game.creeps[retiringCreepEntry.creepName];
                     //Simply check if the creep still exists in the game list
-                    if(creep == null)
+                    if(creep === undefined || creep == null)
                     {
                         //If not we can assume its dead this seems safer then checking if the ticks to live is valid as it usally is not
                         delete Memory.creeps[retiringCreepEntry.creepName];
@@ -54,7 +54,6 @@ var BirthController =
                                 ownerController.DroneCount--;
                             }
                         }
-                        console.log("Removing retired enetry");
                         this.Retiring.splice(itr, 1);
                     }
                 }
@@ -75,7 +74,7 @@ var BirthController =
                     var spawner = spawns[i];
                     if (spawner.energy >= Cost && spawner.spawning == null)
                     {
-                        var ret = spawner.createCreep(From.CreepSettings, null, { JobState: null });
+                        var ret = spawner.createCreep(From.CreepSettings, null, { JobState: null, Retiring: false });
                         if (ret.length >= 3)
                         {
                             From.DroneCount++;
@@ -89,7 +88,7 @@ var BirthController =
                 //If we got here then a spawn just using the spawners energy is not enough so we look at the energy as a whole and try
                 if (RoomController.Room.energyAvailable >= Cost)
                 {
-                    var ret = spawner.createCreep(From.CreepSettings, null, { JobState: null });
+                    var ret = spawner.createCreep(From.CreepSettings, null, { JobState: null, Retiring: false });
                     if (ret.length >= 3) {
                         From.DroneCount++;
                         From.BirthRequestMade = false;
@@ -115,13 +114,13 @@ var BirthController =
     },
     RequestRetiring: function(From,Creep)
     {
-
-        if (Creep.memory == null || Creep.memory.Retiring == false) {
+        if (Creep.memory.Retiring == false)
+        {
             //Sanity Check
             if (this.Initialized) {
                 //Push the retiring creep onto the retiring list
                 this.Retiring.push({ ControllerName: From.Name, creepName: Creep.name });
-                Creep.Memory.Retiring = true;
+                Creep.memory.Retiring = true;
             }
         }
     }

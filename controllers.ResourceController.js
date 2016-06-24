@@ -19,7 +19,7 @@ var ResourceController =
     LoadMem: function(RoomControllerData)
     {
         //Clear out the lists since they may hold values from differnt rooms
-        this.Sources = [];
+        this.Sources = [];//RoomControllerData[this.Name].Sources;
         this.DepositTargets = [];
         this.BuildTargets = [];
         this.RepairTargets = [];
@@ -27,16 +27,18 @@ var ResourceController =
     },
     SaveMem: function(RoomControllerData)
     {
-
+        //RoomControllerData[this.Name].Sources = this.Sources;
     },
     Manage: function(RoomController)
     {
+
         //Get Room Energy Sources
         var srcs = RoomController.Room.find(FIND_SOURCES)
-        for(var i in srcs)
+        for (var i in srcs)
         {
             this.Sources.push({ Source: srcs[i], DroneCount: 0 });
         }
+
 
         //Get all the strucutres and find any that need repair
         var Structures = RoomController.Room.find(FIND_STRUCTURES);
@@ -87,6 +89,8 @@ var ResourceController =
             this.BuildTargets.push({ Target: constructionSites[i], DroneCount: 0 });
         }
 
+
+
         //TODO Add search for hostiles
     },
     GetRepairTarget: function ()
@@ -112,9 +116,15 @@ var ResourceController =
 
         for(var i in this.DepositTargets)
         {
-            if(ret.DroneCount > this.DepositTargets[i].DroneCount)
-            {
-                ret = this.DepositTargets[i];
+            if (this.DepositTargets[i].Target.structureType == "spawn" || this.DepositTargets[i].Target.structureType == "extension") {
+                if (ret.DroneCount > this.DepositTargets[i].DroneCount - 1) {
+                    ret = this.DepositTargets[i];
+                }
+            }
+            else {
+                if (ret.DroneCount > this.DepositTargets[i].DroneCount) {
+                    ret = this.DepositTargets[i];
+                }
             }
         }
         ret.DroneCount++;
@@ -127,22 +137,12 @@ var ResourceController =
  
         for (var i in this.Sources)
         {
-            //Bias Extension and Spawners
-            if (this.Sources[i].Source.structureType == "spawn" || this.Sources[i].Source.structureType == "extension")
+            if (ret.DroneCount > this.Sources[i].DroneCount)
             {
-                //We bias Spawns and extension simply by saying there is one less drone on it there there is
-                if (ret.DroneCount > this.Sources[i].DroneCount - 1)
-                {
                     ret = this.Sources[i];
-                }
-            }
-            else
-            {
-                if (ret.DroneCount > this.Sources[i].DroneCount) {
-                    ret = this.Sources[i];
-                }
             }
         }
+
         ret.DroneCount++;
         return ret.Source;
     },
