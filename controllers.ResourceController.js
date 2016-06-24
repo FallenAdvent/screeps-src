@@ -83,6 +83,8 @@ var ResourceController =
             //TODO Add something about energy storage systems at some point
         }
 
+        this.RepairTargets.sort(function (a, b) { if (a.hitsMax < b.hitsMax) return a; else { return b; } });
+
         var constructionSites = RoomController.Room.find(FIND_CONSTRUCTION_SITES);
         for(var i in constructionSites)
         {
