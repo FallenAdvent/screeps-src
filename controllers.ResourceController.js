@@ -78,8 +78,16 @@ var ResourceController =
                         this.DepositTargets.push({ Target: structure, DroneCount: 0 });
                     }
                 }
-
             }
+
+            if(structure.structureType == "tower")
+            {
+                if (structure.energy < structure.energyCapacity)
+                {
+                    this.DepositTargets.push({ Target: structure, DroneCount: 0 });
+                }
+            }
+
             //TODO Add something about energy storage systems at some point
         }
 
