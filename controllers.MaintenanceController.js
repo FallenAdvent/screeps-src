@@ -60,6 +60,10 @@ var MaintenanceController =
         }
     },
     GetCreepSettings: function (AvlialbeCost) {
+        if (AvlialbeCost >= 700) {
+            return [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+        }
+
         if (AvlialbeCost >= 500) {
             return [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
         }
