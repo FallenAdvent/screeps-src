@@ -63,9 +63,9 @@ var HarvestController = {
     },
     GetCreepSettings: function(AvlialbeCost)
     {
-        if (AvlialbeCost >= 700)
+        if (AvlialbeCost >= 750)
         {
-            return [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+            return [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE];
         }
 
         if(AvlialbeCost >= 500)
