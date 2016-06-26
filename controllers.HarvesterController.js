@@ -61,19 +61,19 @@ var HarvestController = {
             }
         }
     },
-    GetCreepSettings: function(AvlialbeCost)
+    GetCreepSettings: function(AvailableCost)
     {
-        if (AvlialbeCost >= 750)
+        if (AvailableCost >= 750)
         {
             return [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE];
         }
 
-        if(AvlialbeCost >= 500)
+        if(AvailableCost >= 500)
         {
             return [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
         }
 
-        if(AvlialbeCost < 400 && AvlialbeCost > 300)
+        if(AvailableCost < 400 && AvailableCost > 300)
         {
             return [WORK, CARRY, CARRY, MOVE, MOVE];
         }
