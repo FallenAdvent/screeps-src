@@ -91,7 +91,7 @@ var ResourceController =
             //TODO Add something about energy storage systems at some point
         }
 
-        this.RepairTargets.sort(function (a, b) { return a.Target.hits - b.Target.hitsMax; });
+        this.RepairTargets.sort(function (a, b) { return a.Target.hits - b.Target.hits; });
 
         var constructionSites = RoomController.Room.find(FIND_CONSTRUCTION_SITES);
         for(var i in constructionSites)
